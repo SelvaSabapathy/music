@@ -30,7 +30,7 @@ public class MusicIT {
      */
     @Test
     public void createPlaylist() throws Exception {
-        PlaylistDTO playlist = PlaylistDTO.builder().playlistName("List1").build();
+        PlaylistDTO playlist = new PlaylistDTO("List1");
 
         mockMvc.perform(post("/playlists")
                 .contentType(MediaType.APPLICATION_JSON)
