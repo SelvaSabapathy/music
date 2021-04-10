@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class MusicIT {
      * And the playlist is empty.
      */
     @Test
+    @DirtiesContext
     public void createPlaylist() throws Exception {
         mockMvc.perform(post("/playlists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -52,6 +54,7 @@ public class MusicIT {
     }
 
     @Test
+    @DirtiesContext
     public void getAllPlaylists() throws Exception {
         this.createPlaylist();
         String result = mockMvc.perform(get("/playlists")
