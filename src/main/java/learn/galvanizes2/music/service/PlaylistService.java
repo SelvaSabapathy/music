@@ -5,6 +5,8 @@ import learn.galvanizes2.music.repository.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlaylistService {
 
@@ -13,5 +15,9 @@ public class PlaylistService {
 
     public void savePlaylist(PlaylistEnitiy playlistEnitiy) {
         playlistRepository.save(playlistEnitiy);
+    }
+
+    public List<PlaylistEnitiy> getAllPlaylists() {
+        return playlistRepository.findAll();
     }
 }
