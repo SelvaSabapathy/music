@@ -1,5 +1,7 @@
 package learn.galvanizes2.music;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import learn.galvanizes2.music.controller.model.PlaylistDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +20,9 @@ public class MusicIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     /**
      *     When a playlist is created with a name
      *     Then a confirmation is returned that it was successful.
@@ -25,9 +30,11 @@ public class MusicIT {
      */
     @Test
     public void createPlaylist() throws Exception {
+        PlaylistDTO playlist = PlaylistDTO.builder().playlistName("List1").build();
+
         mockMvc.perform(post("/playlists")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("[\"playlistName\": \"List1\"")
+                .content(objectMapper.writeValueAsString(playlist))
         )
         .andExpect(status().isCreated());
     }
