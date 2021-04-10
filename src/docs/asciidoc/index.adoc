@@ -6,10 +6,18 @@ include::{snippets}/Playlists/http-request.adoc[]
 .response
 include::{snippets}/Playlists/http-response.adoc[]
 
-AddBook
+Add New Playlist
 
 .request
 include::{snippets}/AddPlaylist/http-request.adoc[]
 
 .response
 include::{snippets}/AddPlaylist/http-response.adoc[]
+
+Add New Song to Playlist
+
+.request
+include::{snippets}/AddSongToPlaylist/http-request.adoc[]
+
+.response
+include::{snippets}/AddSongToPlaylist/http-response.adoc[]

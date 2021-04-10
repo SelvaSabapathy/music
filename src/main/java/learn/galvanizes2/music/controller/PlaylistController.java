@@ -1,6 +1,7 @@
 package learn.galvanizes2.music.controller;
 
 import learn.galvanizes2.music.controller.model.PlaylistDTO;
+import learn.galvanizes2.music.controller.model.SongDTO;
 import learn.galvanizes2.music.entity.PlaylistEntity;
 import learn.galvanizes2.music.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,4 +33,13 @@ public class PlaylistController {
                 PlaylistDTO.builder().playlistName(entity.getPlaylistName()).build())
                 .collect(Collectors.toList());
     }
+
+    @PostMapping("/{listName}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SongDTO addSongToPlayList() {
+
+        return null;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package learn.galvanizes2.music;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import learn.galvanizes2.music.controller.model.PlaylistDTO;
+import learn.galvanizes2.music.controller.model.SongDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +52,15 @@ public class MusicIT {
      */
     @Test
     @DirtiesContext
-    public void createPlaylist() throws Exception {
+    public String createPlaylist() throws Exception {
         mockMvc.perform(post("/playlists")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(playList))
         )
-                .andExpect(status().isCreated());
-//                .andDo(document("AddPlaylist", responseFields(
-//                        fieldWithPath("playlistName").description("The name of the Playlist"))));
-//        , requestBody(fieldWithPath("playlistName").description("Playlist requestbody payload"))));
+                .andExpect(status().isCreated())
+                .andDo(document("AddPlaylist"));
+
+        return playList.getPlaylistName();
     }
 
     @Test
@@ -83,6 +84,27 @@ public class MusicIT {
     }
 
     /**
+     * Given a playlist
+     * When a song is added
+     * Then the playlist have one more song
+     */
+
+    @Test
+    @DirtiesContext
+    void addSongToExistingPlaylist() throws Exception {
+        String listName = this.createPlaylist();
+        mockMvc.perform(post("/playlists/{listName}", listName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        SongDTO.builder()
+                                .songName("BestSongEver")
+                                .build())))
+                .andExpect(status().isCreated())
+                .andDo(document("AddSongToPlaylist"));
+    }
+
+
+    /**
      *     When a playlist is created with existing name
      *     Then a message is returned that it was unsuccessful.
      */
@@ -91,13 +113,6 @@ public class MusicIT {
      *      When a playlist is created without a name
      *     Then a message is returned that a name is required.
      */
-
-    /**
-     *    Given a playlist
-     *     When a song is added
-     *     Then the playlist have one more song
-     */
-
     /**
      *    Given a playlist has songs
      *     When a song is removed
