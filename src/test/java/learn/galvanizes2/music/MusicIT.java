@@ -6,6 +6,7 @@ import learn.galvanizes2.music.controller.model.PlaylistDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -17,12 +18,17 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 public class MusicIT {
 
     @Autowired
@@ -51,6 +57,9 @@ public class MusicIT {
                 .content(objectMapper.writeValueAsString(playList))
         )
                 .andExpect(status().isCreated());
+//                .andDo(document("AddPlaylist", responseFields(
+//                        fieldWithPath("playlistName").description("The name of the Playlist"))));
+//        , requestBody(fieldWithPath("playlistName").description("Playlist requestbody payload"))));
     }
 
     @Test
@@ -60,6 +69,9 @@ public class MusicIT {
         String result = mockMvc.perform(get("/playlists")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(document("Playlists", responseFields(
+                        fieldWithPath("[0].playlistName").description("The name of the Playlist")
+                )))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
