@@ -125,9 +125,6 @@ public class MusicIT {
 
         String result = mockMvc.perform(get("/playlists/{listName}", listName))
                 .andExpect(status().isOk())
-                .andDo(document("PlaylistByName", responseFields(
-                        fieldWithPath("playlistName").description("The name of the Playlist")
-                )))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
