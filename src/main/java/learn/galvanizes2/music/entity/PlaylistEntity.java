@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlaylistEnitiy {
+public class PlaylistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
