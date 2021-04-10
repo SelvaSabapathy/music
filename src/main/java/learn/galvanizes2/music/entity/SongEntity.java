@@ -1,5 +1,6 @@
 package learn.galvanizes2.music.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,24 +10,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlaylistEntity {
+public class SongEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    String playlistName;
-    @OneToMany(mappedBy = "songName")
-    List<SongEntity> trackList = new ArrayList<>();
-
-    public void add(SongEntity songEntity) {
-        trackList.add(songEntity);
-    }
+    String songName;
+    @ManyToOne
+    @JoinColumn(name = "trackList", nullable = false)
+    PlaylistEntity playlistEntity;
 }

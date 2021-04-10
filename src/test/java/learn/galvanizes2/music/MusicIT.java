@@ -71,7 +71,8 @@ public class MusicIT {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("Playlists", responseFields(
-                        fieldWithPath("[0].playlistName").description("The name of the Playlist")
+                        fieldWithPath("[0].playlistName").description("The name of the Playlist"),
+                        fieldWithPath("[0].trackList").description("List of Songs on the Playlist")
                 )))
                 .andReturn()
                 .getResponse()
@@ -103,6 +104,41 @@ public class MusicIT {
                 .andDo(document("AddSongToPlaylist"));
     }
 
+    /**
+     * Given a playlist has songs
+     * When retrieve the playlist
+     * Then see the songs on the playlist
+     */
+
+    @Test
+    @DirtiesContext
+    void getPlayListByName() throws Exception {
+        this.addSongToExistingPlaylist();
+        String listName = this.playList.getPlaylistName();
+
+        PlaylistDTO expected = PlaylistDTO.builder()
+                .playlistName(listName)
+                .trackList(List.of(SongDTO.builder()
+                        .songName("AddSongToPlaylist")
+                        .build()))
+                .build();
+
+        String result = mockMvc.perform(get("/playlists/{listName}", listName))
+                .andExpect(status().isOk())
+                .andDo(document("PlaylistByName", responseFields(
+                        fieldWithPath("playlistName").description("The name of the Playlist")
+                )))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        PlaylistDTO playlistDTO = objectMapper.readValue(result, new TypeReference<PlaylistDTO>() {
+        });
+
+        assertThat(playlistDTO, is(expected));
+    }
+
 
     /**
      *     When a playlist is created with existing name
@@ -119,9 +155,5 @@ public class MusicIT {
      *     Then the playlist have one less song
      */
 
-    /**
-     *    Given a playlist has songs
-     *     When retrieve the playlist
-     *     Then see the songs on the playlist
-     */
+
 }

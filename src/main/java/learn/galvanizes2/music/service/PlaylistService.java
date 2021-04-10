@@ -20,4 +20,8 @@ public class PlaylistService {
     public List<PlaylistEntity> getAllPlaylists() {
         return playlistRepository.findAll();
     }
+
+    public PlaylistEntity findPlaylistByName(String name) {
+        return playlistRepository.findByPlaylistName(name);
+    }
 }

@@ -1,6 +1,7 @@
 package learn.galvanizes2.music.service;
 
 import learn.galvanizes2.music.entity.PlaylistEntity;
+import learn.galvanizes2.music.entity.SongEntity;
 import learn.galvanizes2.music.repository.PlaylistRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -8,10 +9,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -43,6 +46,23 @@ public class PlaylistServiceTest {
 
         assertThat(result).isEqualTo(List.of(playlistEnitiy));
         verify(repository).findAll();
+    }
+
+    @Test
+    void getPlaylistByNameTest() {
+        PlaylistEntity playlistEnitiy = PlaylistEntity.builder()
+                .playlistName("findMe")
+                .trackList(new ArrayList<>())
+                .build();
+        SongEntity songEntity = SongEntity.builder().build();
+        playlistEnitiy.add(songEntity);
+
+        when(repository.findByPlaylistName(anyString())).thenReturn(playlistEnitiy);
+
+        PlaylistEntity response = service.findPlaylistByName("findMe");
+
+        assertThat(response).isEqualTo(playlistEnitiy);
+        verify(repository).findByPlaylistName("findMe");
     }
 
     @AfterEach

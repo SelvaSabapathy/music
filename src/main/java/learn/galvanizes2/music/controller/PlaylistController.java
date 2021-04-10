@@ -37,7 +37,12 @@ public class PlaylistController {
     @PostMapping("/{listName}")
     @ResponseStatus(HttpStatus.CREATED)
     public SongDTO addSongToPlayList() {
+        return null;
+    }
 
+    @GetMapping("/{listName}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlaylistDTO getPlayListByName() {
         return null;
     }
 
