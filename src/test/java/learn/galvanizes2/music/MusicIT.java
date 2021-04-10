@@ -1,7 +1,9 @@
 package learn.galvanizes2.music;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import learn.galvanizes2.music.controller.model.PlaylistDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,6 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,20 +30,41 @@ public class MusicIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private PlaylistDTO playList;
+
+    @BeforeEach
+    void setUp() {
+        this.playList = PlaylistDTO.builder().playlistName("NewList").build();
+    }
+
     /**
-     *     When a playlist is created with a name
-     *     Then a confirmation is returned that it was successful.
-     *     And the playlist is empty.
+     * When a playlist is created with a name
+     * Then a confirmation is returned that it was successful.
+     * And the playlist is empty.
      */
     @Test
     public void createPlaylist() throws Exception {
-        PlaylistDTO playlist = new PlaylistDTO("List1");
-
         mockMvc.perform(post("/playlists")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(playlist))
+                .content(objectMapper.writeValueAsString(playList))
         )
-        .andExpect(status().isCreated());
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void getAllPlaylists() throws Exception {
+        this.createPlaylist();
+        String result = mockMvc.perform(get("/playlists")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<PlaylistDTO> playlistDTOList = objectMapper.readValue(result, new TypeReference<List<PlaylistDTO>>() {
+        });
+
+        assertThat(playlistDTOList, is(Arrays.asList(playList)));
     }
 
     /**
